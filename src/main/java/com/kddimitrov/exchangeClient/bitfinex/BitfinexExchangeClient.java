@@ -1,19 +1,21 @@
 package com.kddimitrov.exchangeClient.bitfinex;
 
 import com.kddimitrov.exchangeClient.AbstractExchangeClient;
+import com.kddimitrov.exchangeClient.ExchangeClient;
 import com.kddimitrov.exchangeClient.config.ApplicationConfig;
 import com.kddimitrov.exchangeClient.exception.ExchangeClientConnectionError;
 import com.kddimitrov.exchangeClient.orderbook.OrderBook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.net.URI;
 
-@Service
-public class BitfinexExchangeClient extends AbstractExchangeClient {
+/**
+ * Bitfinex exchange client provider.
+ */
+@ExchangeClient
+public class BitfinexExchangeClient extends AbstractExchangeClient implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(BitfinexExchangeClient.class);
 
     @Autowired
@@ -22,9 +24,8 @@ public class BitfinexExchangeClient extends AbstractExchangeClient {
         super(URI.create(config.getBitfinexUrl()), new BitfinexHandler(orderBook));
     }
 
-    @PostConstruct
     @Override
-    public void connect() {
+    public void run() {
         try {
             super.connect();
         } catch (ExchangeClientConnectionError ecce) {

@@ -2,6 +2,9 @@ package com.kddimitrov.exchangeClient.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+/**
+ * Configuration class for handling custom configuration properties under {@code "exchange"} root.
+ */
 @ConfigurationProperties(prefix = "exchange")
 public class ApplicationConfig {
     static final int DEFAULT_BOOK_SIZE = 10;

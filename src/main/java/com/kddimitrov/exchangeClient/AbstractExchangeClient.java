@@ -12,7 +12,6 @@ import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
 import java.net.URI;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 public abstract class AbstractExchangeClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractExchangeClient.class);
@@ -25,6 +24,12 @@ public abstract class AbstractExchangeClient {
         this.websocketHandler = messageWebsocketHandler;
     }
 
+    /**
+     * Initialize connection with exchange provider.
+     * <p></p>
+     *
+     * @throws ExchangeClientConnectionError in case of connection is unsuccessful within 2 attempts.
+     */
     public void connect() throws ExchangeClientConnectionError {
         WebSocketClient webSocketClient = new StandardWebSocketClient();
 
@@ -36,6 +41,13 @@ public abstract class AbstractExchangeClient {
         );
     }
 
+    /**
+     * Sends subscription message to the exchange provider.
+     * <p></p>
+     *
+     * @param webSocketSession session with exchange provider
+     * @throws ExchangeClientConnectionError in case of connection is unsuccessful within 2 attempts.
+     */
     protected void subscribe(Optional<WebSocketSession> webSocketSession) throws ExchangeClientConnectionError {
         WebSocketSession session = webSocketSession.orElseThrow(ExchangeClientConnectionError::new);
 
@@ -48,20 +60,28 @@ public abstract class AbstractExchangeClient {
         }
     }
 
-    private Optional<WebSocketSession> withRetry(WebSocketConnectionLambda method) {
+    /**
+     * Executes lambda and retry once more in case of {@code InterruptedException} occurs.
+     * <p></p>
+     *
+     * @param method to execute
+     * @return Optional of method result or empty.
+     */
+    private Optional<WebSocketSession> withRetry(Lambda<WebSocketSession> method) {
         try {
             return Optional.of(method.doConnect());
-        } catch (ExecutionException ee) {
-            LOGGER.error("Exception while accessing websockets: ", ee);
         } catch (InterruptedException ignored) {
 
             LOGGER.error("Exception while accessing websockets, going to retry...");
             try {
                 return Optional.of(method.doConnect());
-            } catch (ExecutionException | InterruptedException e) {
+            } catch (Exception e) {
                 LOGGER.error("Exception while accessing websockets: ", e);
             }
+        } catch (Exception ee) {
+            LOGGER.error("Exception while accessing websockets: ", ee);
         }
+
         return Optional.empty();
     }
 }

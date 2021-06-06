@@ -10,6 +10,9 @@ import org.json.JSONException;
 import org.json.JSONTokener;
 import org.springframework.web.socket.WebSocketSession;
 
+/**
+ * Handles communication with Bitfinex trough web sockets.
+ */
 public class BitfinexHandler extends BaseWebSocketHandler {
     private final Logger logger = LogManager.getLogger(BitfinexHandler.class);
     private final OrderBook book;

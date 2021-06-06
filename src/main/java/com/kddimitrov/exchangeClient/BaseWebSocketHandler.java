@@ -9,6 +9,12 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
+/**
+ * A convenient base class for {@link org.springframework.web.socket.WebSocketHandler} implementation for handling
+ * text messages, with only implementation of {@link AbstractWebSocketHandler#handleTextMessage(WebSocketSession, TextMessage)}.
+ * <p></p>
+ * The extenders should provide implementation for change and update callbacks.
+ */
 public abstract class BaseWebSocketHandler extends AbstractWebSocketHandler {
     private final Logger logger = LogManager.getLogger(BaseWebSocketHandler.class);
 
@@ -25,11 +31,11 @@ public abstract class BaseWebSocketHandler extends AbstractWebSocketHandler {
         }
     }
 
-    protected abstract void handleChannelCallback(String messagePayload) throws JSONException, JsonProcessingException;
-
     protected void handleCommandCallback(String messagePayload) {
         logger.info("Payload received {}", messagePayload);
     }
+
+    protected abstract void handleChannelCallback(String messagePayload) throws JSONException, JsonProcessingException;
 
     protected abstract void handleUpdateCallback(JSONArray jsonArray) throws JSONException, JsonProcessingException;
 }

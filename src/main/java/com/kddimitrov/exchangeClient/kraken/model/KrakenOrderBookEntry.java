@@ -2,6 +2,12 @@ package com.kddimitrov.exchangeClient.kraken.model;
 
 import com.kddimitrov.exchangeClient.orderbook.OrderBookEntry;
 
+/**
+ * Order book entry representing Kraken entry.
+ * <p></p>
+ * @see com.kddimitrov.exchangeClient.orderbook.OrderBookEntry
+ * @see <a href="https://docs.kraken.com/websockets/#message-book">Kraken public order books</a>
+ */
 public class KrakenOrderBookEntry implements OrderBookEntry {
 
     private final Double price;

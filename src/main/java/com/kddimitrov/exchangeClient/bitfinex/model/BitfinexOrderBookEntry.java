@@ -2,6 +2,12 @@ package com.kddimitrov.exchangeClient.bitfinex.model;
 
 import com.kddimitrov.exchangeClient.orderbook.OrderBookEntry;
 
+/**
+ * Order book entry representing Bitfinex entry.
+ * <p></p>
+ * @see com.kddimitrov.exchangeClient.orderbook.OrderBookEntry
+ * @see <a href="https://docs.bitfinex.com/v1/reference#ws-public-order-books">Bitfinex public order books</a>
+ */
 public class BitfinexOrderBookEntry implements OrderBookEntry {
 
     private final Double price;

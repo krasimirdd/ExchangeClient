@@ -16,6 +16,9 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.springframework.web.socket.WebSocketSession;
 
+/**
+ * Handles communication with Kraken trough web sockets.
+ */
 public class KrakenHandler extends BaseWebSocketHandler {
     private final Logger logger = LogManager.getLogger(KrakenHandler.class);
     private final OrderBook book;

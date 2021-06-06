@@ -1,18 +1,21 @@
 package com.kddimitrov.exchangeClient.kraken;
 
 import com.kddimitrov.exchangeClient.AbstractExchangeClient;
+import com.kddimitrov.exchangeClient.ExchangeClient;
 import com.kddimitrov.exchangeClient.config.ApplicationConfig;
 import com.kddimitrov.exchangeClient.exception.ExchangeClientConnectionError;
 import com.kddimitrov.exchangeClient.orderbook.OrderBook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.net.URI;
 
-@Service
-public class KrakenExchangeClient extends AbstractExchangeClient {
+
+/**
+ * Kraken exchange client provider.
+ */
+@ExchangeClient
+public class KrakenExchangeClient extends AbstractExchangeClient implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(KrakenExchangeClient.class);
 
     protected KrakenExchangeClient(OrderBook orderBook,
@@ -20,9 +23,8 @@ public class KrakenExchangeClient extends AbstractExchangeClient {
         super(URI.create(config.getKrakenUrl()), new KrakenHandler(orderBook));
     }
 
-    @PostConstruct
     @Override
-    public void connect() {
+    public void run() {
         try {
             super.connect();
         } catch (ExchangeClientConnectionError ecce) {
