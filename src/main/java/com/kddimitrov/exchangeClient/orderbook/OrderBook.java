@@ -1,6 +1,5 @@
 package com.kddimitrov.exchangeClient.orderbook;
 
-
 import org.apache.logging.log4j.util.Strings;
 
 import java.time.LocalDateTime;
@@ -26,8 +25,8 @@ import java.util.function.Function;
  */
 public class OrderBook extends HashMap<Integer, List<OrderBookEntry>> {
     private final int BOOK_SIZE;
-    private static OrderBook instance;
-    public static final Comparator<OrderBookEntry> DESCENDING_COMPARATOR =
+    private static volatile OrderBook instance = null;
+    private static final Comparator<OrderBookEntry> DESCENDING_COMPARATOR =
             Comparator.comparing(OrderBookEntry::getPrice).reversed();
 
     private OrderBook(int bookSize) {
@@ -44,14 +43,13 @@ public class OrderBook extends HashMap<Integer, List<OrderBookEntry>> {
      * @param bookSize the size of bids and asks
      * @return the only OrderBook instance
      */
-    public static OrderBook getInstance(int bookSize) {
+    public static synchronized OrderBook getInstance(int bookSize) {
         if (instance == null) {
             instance = new OrderBook(bookSize);
         }
 
         return instance;
     }
-
 
     /**
      * Invokes {@link java.util.HashMap#put} synchronously and prints the order book to the {@code System.out}
@@ -126,7 +124,7 @@ public class OrderBook extends HashMap<Integer, List<OrderBookEntry>> {
      * @param entries orderbook bid entries to add
      */
     public synchronized void updateBids(List<OrderBookEntry> entries) {
-        update(entries, super.get(0));
+        update(entries, super.get(0), true);
     }
 
     /**
@@ -135,7 +133,7 @@ public class OrderBook extends HashMap<Integer, List<OrderBookEntry>> {
      * @param entries orderbook ask entries to add
      */
     public synchronized void updateAsks(List<OrderBookEntry> entries) {
-        update(entries, super.get(1));
+        update(entries, super.get(1), false);
     }
 
     /**
@@ -144,31 +142,32 @@ public class OrderBook extends HashMap<Integer, List<OrderBookEntry>> {
      * @param entries          new entries
      * @param orderBookEntries current entries
      */
-    private synchronized void update(List<OrderBookEntry> entries, List<OrderBookEntry> orderBookEntries) {
+    private synchronized void update(List<OrderBookEntry> entries, List<OrderBookEntry> orderBookEntries, boolean removeLast) {
         entries.forEach(e -> {
             orderBookEntries.removeIf(or -> or.getPrice().equals(e.getPrice()));
             orderBookEntries.add(e);
         });
         orderBookEntries.sort(DESCENDING_COMPARATOR);
-        trimToSize(orderBookEntries, BOOK_SIZE);
+        trimToSize(orderBookEntries, BOOK_SIZE, removeLast);
         System.out.println(toString());
     }
 
     /**
      * Recursive function to remove extra entries.
      *
-     * @param entries current entries
-     * @param size    desired size
+     * @param entries    current entries
+     * @param size       desired size
+     * @param removeLast
      */
-    private synchronized void trimToSize(List<OrderBookEntry> entries, int size) {
+    private synchronized void trimToSize(List<OrderBookEntry> entries, int size, boolean removeLast) {
         if (entries.size() > size) {
-            entries.remove(entries.size() - 1);
+            entries.remove(removeLast ? entries.size() - 1 : 0);
         }
 
         if (entries.size() <= size) {
             return;
         }
 
-        trimToSize(entries, size);
+        trimToSize(entries, size, removeLast);
     }
 }
