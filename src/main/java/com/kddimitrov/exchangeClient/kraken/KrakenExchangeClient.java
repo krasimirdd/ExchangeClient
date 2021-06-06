@@ -1,9 +1,9 @@
 package com.kddimitrov.exchangeClient.kraken;
 
 import com.kddimitrov.exchangeClient.AbstractExchangeClient;
-import com.kddimitrov.exchangeClient.ExchangeClient;
+import com.kddimitrov.exchangeClient.util.ExchangeClient;
 import com.kddimitrov.exchangeClient.config.ApplicationConfig;
-import com.kddimitrov.exchangeClient.exception.ExchangeClientConnectionError;
+import com.kddimitrov.exchangeClient.util.exception.ExchangeClientConnectionError;
 import com.kddimitrov.exchangeClient.orderbook.OrderBook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

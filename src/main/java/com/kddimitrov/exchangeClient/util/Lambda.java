@@ -1,4 +1,4 @@
-package com.kddimitrov.exchangeClient;
+package com.kddimitrov.exchangeClient.util;
 
 import java.util.Optional;
 

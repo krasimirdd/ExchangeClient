@@ -1,6 +1,8 @@
 package com.kddimitrov.exchangeClient;
 
-import com.kddimitrov.exchangeClient.exception.ExchangeClientConnectionError;
+import com.kddimitrov.exchangeClient.SubscribeMessage;
+import com.kddimitrov.exchangeClient.util.exception.ExchangeClientConnectionError;
+import com.kddimitrov.exchangeClient.util.Lambda;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.TextMessage;

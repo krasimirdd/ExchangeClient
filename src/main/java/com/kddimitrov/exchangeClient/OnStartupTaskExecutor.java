@@ -1,5 +1,6 @@
 package com.kddimitrov.exchangeClient;
 
+import com.kddimitrov.exchangeClient.util.ExchangeClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -15,7 +16,7 @@ import java.util.concurrent.CountDownLatch;
  * <p></p>
  *
  * @see ApplicationReadyEvent
- * @see com.kddimitrov.exchangeClient.ExchangeClient
+ * @see ExchangeClient
  */
 @Component
 public class OnStartupTaskExecutor {
