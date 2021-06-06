@@ -1,0 +1,4 @@
+exchange:
+  bitfinexUrl: "wss://api.bitfinex.com/ws/1"
+  krakenUrl: "wss://ws.kraken.com"
+  bookSize: 20
