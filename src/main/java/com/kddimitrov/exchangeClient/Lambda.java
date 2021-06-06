@@ -1,5 +1,7 @@
 package com.kddimitrov.exchangeClient;
 
+import java.util.Optional;
+
 @FunctionalInterface
 public interface Lambda<T> {
 
@@ -8,5 +10,5 @@ public interface Lambda<T> {
      *
      * @return
      */
-    T doConnect() throws Exception;
+    Optional<T> invoke() throws Exception;
 }

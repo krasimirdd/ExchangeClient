@@ -34,10 +34,10 @@ public abstract class AbstractExchangeClient {
         WebSocketClient webSocketClient = new StandardWebSocketClient();
 
         subscribe(
-                withRetry(() -> webSocketClient.doHandshake(this.websocketHandler,
-                                                            new WebSocketHttpHeaders(),
-                                                            this.url)
-                        .get())
+                withRetry(() -> Optional.of(webSocketClient.doHandshake(this.websocketHandler,
+                                                                        new WebSocketHttpHeaders(),
+                                                                        this.url)
+                                                    .get()))
         );
     }
 
@@ -69,12 +69,12 @@ public abstract class AbstractExchangeClient {
      */
     private Optional<WebSocketSession> withRetry(Lambda<WebSocketSession> method) {
         try {
-            return Optional.of(method.doConnect());
+            return method.invoke();
         } catch (InterruptedException ignored) {
 
             LOGGER.error("Exception while accessing websockets, going to retry...");
             try {
-                return Optional.of(method.doConnect());
+                return method.invoke();
             } catch (Exception e) {
                 LOGGER.error("Exception while accessing websockets: ", e);
             }
